@@ -1,36 +1,66 @@
-# relationship_app/query_samples.py
 
 from relationship_app.models import Author, Book, Library, Librarian
+from django.core.exceptions import ObjectDoesNotExist
 
-# Query 1: All books by a specific author
+
 def get_books_by_author(author_name):
-    author = Author.objects.get(name=author_name)
-    return Book.objects.filter(author=author)
+    """
+    Return all books written by a specific author.
+    """
+    try:
+        author = Author.objects.get(name=author_name)
+        books = author.books.all()  # Uses related_name from Book model
+        return books
+    except ObjectDoesNotExist:
+        print(f"❌ Author '{author_name}' not found.")
+        return []
 
 
-# Query 2: List all books in a library
 def get_books_in_library(library_name):
-    library = Library.objects.get(name=library_name)
-    return library.books.all()
+    """
+    Return all books available in a specific library.
+    """
+    try:
+        library = Library.objects.get(name=library_name)
+        books = library.books.all()
+        return books
+    except ObjectDoesNotExist:
+        print(f"❌ Library '{library_name}' not found.")
+        return []
 
 
-# Query 3: Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
-    library = Library.objects.get(name=library_name)
-    return library.librarian
+    """
+    Retrieve the librarian assigned to a specific library.
+    """
+    try:
+        library = Library.objects.get(name=library_name)
+        librarian = library.librarian  # Accesses OneToOne relationship
+        return librarian
+    except ObjectDoesNotExist:
+        print(f"❌ Library '{library_name}' or librarian not found.")
+        return None
 
 
-# Example usage (you can run this inside Django shell or for testing)
+def display_books(books):
+    """
+    Helper function to print book titles in a formatted way.
+    """
+    if not books:
+        print("No books found.")
+    else:
+        for book in books:
+            print(f"- {book.title}")
+
+
 if __name__ == "__main__":
-    # Assuming you already have data in your database
-    print("Books by John Doe:")
-    for book in get_books_by_author("John Doe"):
-        print(book.title)
+    print("\n📚 Books by John Doe:")
+    display_books(get_books_by_author("John Doe"))
 
-    print("\nBooks in Central Library:")
-    for book in get_books_in_library("Central Library"):
-        print(book.title)
+    print("\n🏛️ Books in Central Library:")
+    display_books(get_books_in_library("Central Library"))
 
-    print("\nLibrarian of Central Library:")
+    print("\n👩‍💼 Librarian of Central Library:")
     librarian = get_librarian_for_library("Central Library")
-    print(librarian.name)
+    if librarian:
+        print(f"- {librarian.name}")
