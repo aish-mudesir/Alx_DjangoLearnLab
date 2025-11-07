@@ -1,4 +1,5 @@
 
+
 from relationship_app.models import Author, Book, Library, Librarian
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -9,8 +10,7 @@ def get_books_by_author(author_name):
     """
     try:
         author = Author.objects.get(name=author_name)
-        books = author.books.all()  # Uses related_name from Book model
-        return books
+        return author.books.all()
     except ObjectDoesNotExist:
         print(f"❌ Author '{author_name}' not found.")
         return []
@@ -22,8 +22,7 @@ def get_books_in_library(library_name):
     """
     try:
         library = Library.objects.get(name=library_name)
-        books = library.books.all()
-        return books
+        return library.books.all()
     except ObjectDoesNotExist:
         print(f"❌ Library '{library_name}' not found.")
         return []
@@ -35,8 +34,7 @@ def get_librarian_for_library(library_name):
     """
     try:
         library = Library.objects.get(name=library_name)
-        librarian = library.librarian  # Accesses OneToOne relationship
-        return librarian
+        return library.librarian
     except ObjectDoesNotExist:
         print(f"❌ Library '{library_name}' or librarian not found.")
         return None
@@ -44,7 +42,7 @@ def get_librarian_for_library(library_name):
 
 def display_books(books):
     """
-    Helper function to print book titles in a formatted way.
+    Helper function to print book titles.
     """
     if not books:
         print("No books found.")
@@ -64,3 +62,4 @@ if __name__ == "__main__":
     librarian = get_librarian_for_library("Central Library")
     if librarian:
         print(f"- {librarian.name}")
+
