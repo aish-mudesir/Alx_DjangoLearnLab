@@ -1,0 +1,11 @@
+<h1>Books Available</h1>
+
+<ul>
+    {% for book in books %}
+        <li>
+            <strong>{{ book.title }}</strong> — {{ book.author }} ({{ book.published_year }})
+        </li>
+    {% empty %}
+        <li>No books found.</li>
+    {% endfor %}
+</ul>
