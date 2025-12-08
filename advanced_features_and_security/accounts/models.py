@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
-# ------------------------
-# Custom User Manager
-# ------------------------
+# ----------------------
+# CUSTOM USER MANAGER
+# ----------------------
 
 class CustomUserManager(BaseUserManager):
+
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Email is required")
@@ -21,26 +22,21 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True")
-
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True")
-
         return self.create_user(username, email, password, **extra_fields)
 
 
-# ------------------------
-# Custom User Model
-# ------------------------
+# ----------------------
+# CUSTOM USER MODEL
+# ----------------------
 
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
-    profile_photo = models.ImageField(upload_to="profiles/", null=True, blank=True)
+    profile_photo = models.ImageField(upload_to='profiles/', null=True, blank=True)
 
     objects = CustomUserManager()
 
     def __str__(self):
         return self.username
+
 
 
