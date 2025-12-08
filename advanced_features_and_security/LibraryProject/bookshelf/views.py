@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .models import Book
 
 # Function-based view: list all books
-def list_books(request):
+def book_list(request):
     books = Book.objects.all()
     return render(request, 'bookshelf/list_books.html', {'books': books})
 
@@ -20,3 +20,4 @@ def edit_book(request, book_id):
 @permission_required('bookshelf.can_delete', raise_exception=True)
 def delete_book(request, book_id):
     return HttpResponse(f"You have permission to delete book ID {book_id}!")
+
