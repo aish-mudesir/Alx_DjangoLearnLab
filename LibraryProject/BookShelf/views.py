@@ -1,10 +1,8 @@
-
-from django.shortcuts import render
+from django.http import HttpResponse
 from .models import Book
 
-def index(request):
-    return render(request, 'BookShelf/index.html')
-
-def book_list(request):
+def home(request):
     books = Book.objects.all()
-    return render(request, 'BookShelf/book_list.html', {'books': books})
+    output = ", ".join([b.title for b in books])
+    return HttpResponse(f"Books: {output}")
+
