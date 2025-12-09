@@ -3,8 +3,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
-from .models import Book, Library  # For other views if needed
-
+from .models import Book, Library
+from .models import Library
+# For other views if needed
 # Registration view
 def register(request):
     if request.method == "POST":
