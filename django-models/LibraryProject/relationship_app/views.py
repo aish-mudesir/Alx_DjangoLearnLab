@@ -8,6 +8,45 @@ from .models import Library
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from .models import UserProfile
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
+
+from .models import Book, Library
+
+# Function-based view: list all books
+def list_books(request):
+    books = Book.objects.all()
+    return render(request, "list_books.html", {"books": books})
+
+
+# Permission protected: ADD BOOK
+@permission_required("relationship_app.can_add_book", raise_exception=True)
+def add_book(request):
+    return HttpResponse("You have permission to add a book.")
+
+
+# Permission protected: EDIT BOOK
+@permission_required("relationship_app.can_change_book", raise_exception=True)
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    return HttpResponse(f"You have permission to edit: {book.title}")
+
+
+# Permission protected: DELETE BOOK
+@permission_required("relationship_app.can_delete_book", raise_exception=True)
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    return HttpResponse(f"You have permission to delete: {book.title}")
+
+
+# Class-based View for Library Details
+from django.views.generic import DetailView
+
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = "library_detail.html"
+    context_object_name = "library"
 
 # Helper functions to check user roles
 def is_admin(user):
