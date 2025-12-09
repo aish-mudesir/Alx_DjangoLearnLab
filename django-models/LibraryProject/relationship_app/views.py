@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from .models import Book, Library
+from django.contrib.auth.forms import UserCreationForm
 
 # -------------------------
 # Function-Based View: List all books
