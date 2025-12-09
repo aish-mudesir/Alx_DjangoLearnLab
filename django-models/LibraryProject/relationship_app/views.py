@@ -1,26 +1,55 @@
-from django.shortcuts import render
-from django.views.generic.detail import DetailView  # <-- required by checker
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout  # ✅ missing import
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # ✅ missing import
+from django.contrib import messages
 
-from .models import Book
-from .models import Library   # <-- required by checker
+# Function-based view: List all books (example from previous tasks)
+from .models import Book, Library
+from django.views.generic.detail import DetailView
 
-# ---------------------------
-# FUNCTION-BASED VIEW
-# ---------------------------
 def list_books(request):
-    books = Book.objects.all()  # <-- required by checker
-    return render(request, "relationship_app/list_books.html", {
-        "books": books
-    })
+    books = Book.objects.all()
+    return render(request, "relationship_app/book_list.html", {"books": books})
 
-
-# ---------------------------
-# CLASS-BASED VIEW
-# ---------------------------
+# Class-based view: Library detail
 class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"
     context_object_name = "library"
+
+# --- Authentication Views ---
+
+# Login view
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)  # ✅ login imported
+            return redirect("list_books")
+        else:
+            messages.error(request, "Invalid username or password")
+    else:
+        form = AuthenticationForm()
+    return render(request, "relationship_app/login.html", {"form": form})
+
+# Logout view
+def logout_view(request):
+    logout(request)  # ✅ logout imported
+    return render(request, "relationship_app/logout.html")
+
+# Registration view
+def register_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)  # ✅ UserCreationForm imported
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # log in after registering
+            return redirect("list_books")
+    else:
+        form = UserCreationForm()
+    return render(request, "relationship_app/register.html", {"form": form})
+
 
 
 
