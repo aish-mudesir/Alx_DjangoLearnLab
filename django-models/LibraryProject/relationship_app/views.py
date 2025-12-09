@@ -16,7 +16,10 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
-
+@login_required
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 # Example of a book list view (requires login)
 @login_required
 def book_list(request):
