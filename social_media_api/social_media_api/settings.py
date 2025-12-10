@@ -22,12 +22,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third-party
+    # Third-party apps
     'rest_framework',
     'rest_framework.authtoken',
 
-    # Local apps
+    # Project apps
     'accounts',
+    'posts',  # <-- Add this line
 ]
 
 # Custom user model
