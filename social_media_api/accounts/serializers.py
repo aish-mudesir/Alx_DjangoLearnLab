@@ -11,9 +11,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     Serializer for registering a new user.
     Automatically creates an auth token for the user.
     """
+    username = serializers.CharField(required=True)  # Explicit CharField
+    email = serializers.CharField(required=True)     # Explicit CharField
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
-    token = serializers.CharField(read_only=True)  # Token will be generated on creation
+    token = serializers.CharField(read_only=True)  # Token generated automatically
 
     class Meta:
         model = User
@@ -33,8 +35,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             bio=validated_data.get('bio', ''),
             profile_picture=validated_data.get('profile_picture', None)
         )
-        # Create token for the user
-        Token.objects.create(user=user)
+        Token.objects.create(user=user)  # Create token
         return user
 
 class UserLoginSerializer(serializers.Serializer):
@@ -42,5 +43,6 @@ class UserLoginSerializer(serializers.Serializer):
     Serializer for logging in a user.
     Returns token on successful authentication.
     """
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(write_only=True, required=True)
+    username = serializers.CharField(required=True)  # Explicit CharField
+    password = serializers.CharField(write_only=True, required=True)  # Explicit CharField
+
