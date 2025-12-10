@@ -77,12 +77,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 # Database (default SQLite)
+# Production Database Configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',  # Use 'django.db.backends.mysql' for MySQL
+        'NAME': 'social_media_db',                  # Your database name
+        'USER': 'db_user',                           # Your database user
+        'PASSWORD': 'db_password',                   # Your database password
+        'HOST': 'localhost',                         # Or your DB host
+        'PORT': '5432',                              # PostgreSQL default port
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
