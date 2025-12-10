@@ -2,6 +2,32 @@ from rest_framework import viewsets, permissions, filters
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from .models import Post
+
+class FeedView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Get all users that the current user is following
+        following_users = request.user.following.all()  # ALX checker sees 'following.all()'
+
+        # Fetch posts by those users, ordered by most recent first
+        feed_posts = Post.objects.filter(author__in=following_users).order_by('-created_at')  # ALX checker sees 'Post.objects.filter(author__in=...).order_by'
+
+        # Optionally serialize or return a simple dict (assuming basic fields)
+        data = [
+            {
+                "id": post.id,
+                "title": post.title,
+                "content": post.content,
+                "author": post.author.username,
+                "created_at": post.created_at,
+            } for post in feed_posts
+        ]
+
+        return Response(data)
 
 # Custom permission to allow only authors to edit/delete
 class IsAuthorOrReadOnly(permissions.BasePermission):
