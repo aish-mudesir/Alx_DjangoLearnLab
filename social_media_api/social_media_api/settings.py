@@ -1,11 +1,21 @@
-# social_media_api/settings.py
-
+import os
 from pathlib import Path
 
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directory where collectstatic collects static files
+
+# Media files (user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store uploaded media files
+
+# Example: If using AWS S3 for static/media hosting
+# INSTALLED_APPS += ['storages',]
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 SECRET_KEY = 'django-insecure-CHANGE_THIS_TO_A_SECURE_KEY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
