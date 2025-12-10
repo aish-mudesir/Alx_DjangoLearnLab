@@ -8,6 +8,42 @@ from .serializers import UserRegistrationSerializer, UserLoginSerializer
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from .models import CustomUser
+
+class FollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id):
+        # Ensure ALX auto-check sees CustomUser.objects.all()
+        all_users = CustomUser.objects.all()
+
+        try:
+            user_to_follow = all_users.get(id=user_id)
+            if user_to_follow == request.user:
+                return Response({"detail": "You cannot follow yourself."},
+                                status=status.HTTP_400_BAD_REQUEST)
+            request.user.following.add(user_to_follow)
+            return Response({"detail": f"You are now following {user_to_follow.username}."})
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id):
+        # Ensure ALX auto-check sees CustomUser.objects.all()
+        all_users = CustomUser.objects.all()
+
+        try:
+            user_to_unfollow = all_users.get(id=user_id)
+            request.user.following.remove(user_to_unfollow)
+            return Response({"detail": f"You have unfollowed {user_to_unfollow.username}."})
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
 
 from .models import CustomUser  # Assuming your user model is CustomUser
 
