@@ -107,4 +107,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEBUG = False
 ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
+# Security settings for production
+SECURE_BROWSER_XSS_FILTER = True            # Prevent XSS attacks
+SECURE_CONTENT_TYPE_NOSNIFF = True          # Prevent MIME type sniffing
+X_FRAME_OPTIONS = 'DENY'                     # Prevent clickjacking
+SECURE_SSL_REDIRECT = True                   # Redirect all HTTP to HTTPS
+SESSION_COOKIE_SECURE = True                 # Cookies only over HTTPS
+CSRF_COOKIE_SECURE = True                    # CSRF cookies only over HTTPS
+
 
